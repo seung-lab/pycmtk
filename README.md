@@ -1,22 +1,35 @@
-# cmtk
+# pycmtk
 
-[![Build Status](https://img.shields.io/travis/jefferis/cmtk.svg)](https://travis-ci.org/jefferis/cmtk) 
+Unofficial Python bindings for cmtk functions.
 
-## README
+Get the original CMTK here: https://www.nitrc.org/projects/cmtk/  
+Get the R version here: https://github.com/jefferis/cmtkr  
 
-This README is designed to be viewed on GitHub. See the following project files
-for information:
+## Compiling
 
-  * [core/README.txt](core/README.txt) Main README
-  * [core/CHANGELOG](core/CHANGELOG) Changes for each CMTK version
-  * [core/LICENSE](core/LICENSE) See also [core/COPYING.txt](core/COPYING.txt)
+Currently the compilation toolchain is a bit of a hack. The cmake files 
+work really well for creating the core cmtk command line tools. We are using
+pybind11 to wrap the C++ functions to avoid syscalls and filesystem IO.  
 
-## Getting CMTK
+We've included pybind11 inside the `core/` directory and pycmtk.cpp as the interface
+to python. 
 
-It is recommended that you use the binary builds available for download from 
-the NITRC website. See https://www.nitrc.org/projects/cmtk/.
+```bash
+0. mkdir build && cd build
+1. cmake -DBUILD_SHARED_LIBS=on -DPYTHON_EXECUTABLE:FILEPATH=`which python` ../core
 
-## Getting Help
+  # This generates the .so files for each compiled subunit like Base, IO, Numerics, etc
+  # which are by default generated as .a files (static libraries instead of shared .so libs).
+  # We also need to specify which version of python to compile against or it will auto-detect
+  # the highest version present on your system.
 
-If you have any trouble compiling or running CMTK, please write to the 
-[CMTK User Forum](https://www.nitrc.org/forum/forum.php?forum_id=857).
+2. make -j 8 # for 8 cores
+3. edit core/CMakeLists.txt to include the python bindings
+4. make pycmtk
+
+  # Generates the python library in build/bin/
+```
+
+Currently, this compilation generates a series of shared libraries (.so files) that are linked to 
+e.g. `build/bin/pycmtk.cpython-36m-x86_64-linux-gnu.so`. This makes it somewhat difficult to distribute, 
+so additional work will be needed to create a combined shared library.
