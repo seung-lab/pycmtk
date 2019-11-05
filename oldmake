@@ -1,0 +1,35 @@
+CC=g++
+MODULE=pycmtk
+
+MXML=-I./Utilities/mxml/ -L./Utilities/mxml/ 
+SQLITE=-I./Utilities/sqlite3/ -L./Utilities/sqlite3/.libs/
+ZLIB=-I./Utilities/zlib/ -L./Utilities/zlib/
+
+FLAGS=-O3 -Wall -shared -std=c++11 -fPIC -fopenmp 
+INCLUDES=$(MXML) $(SQLITE) $(ZLIB) -I./libs/ -I./libs/Base/ -I./libs/IO/ -I./libs/System/ -I./Utilities/NrrdIO/
+
+all: base io system nrrdio numerics 
+
+python: 
+  $(CC) $(FLAGS) $(INCLUDES) `python3 -m pybind11 --includes` *.o pycmtk.cpp  -o pycmtk`python3-config --extension-suffix` -lmxml -lsqlite3 -lz -lbz2
+
+base: mxml
+  $(CC) -c $(FLAGS) $(INCLUDES) libs/Base/*.cxx -lsqlite3
+
+numerics:
+  $(CC) -c $(FLAGS) $(INCLUDES) libs/Numerics/*.cxx -lsqlite3
+
+io: mxml
+  $(CC) -c $(FLAGS) $(INCLUDES) -I./Utilities/NrrdIO -I./Utilities/sqlite3/ libs/IO/*.cxx -lsqlite3
+
+nrrdio:
+  $(CC) -c $(FLAGS) $(INCLUDES) -DTEEM_QNANHIBIT=1 -DTEEM_DIO=0 -I./Utilities/NrrdIO ./Utilities/NrrdIO/*.c -lsqlite3
+
+system: 
+  $(CC) -c $(FLAGS) $(INCLUDES) libs/System/*.cxx -lsqlite3
+
+mxml:
+  cd Utilities/mxml/ && ./configure && make
+
+clean:
+  rm *.o *.so

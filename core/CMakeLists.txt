@@ -37,6 +37,7 @@
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.0)
 SET(CMAKE_LEGACY_CYGWIN_WIN32 0) # Remove when CMake >= 2.8.4 is required
+set(CMAKE_BUILD_TYPE Debug)
 
 IF(COMMAND cmake_policy)
   cmake_policy(SET CMP0003 NEW) ## libraries with full paths vs. search paths
@@ -711,3 +712,50 @@ OPTION(BUILD_CONTRIB "Build, install, and package third-party contributions" OFF
 IF(BUILD_CONTRIB)
   ADD_SUBDIRECTORY(contrib)
 ENDIF(BUILD_CONTRIB)
+
+# SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+add_subdirectory(pybind11)
+pybind11_add_module(pycmtk pycmtk.cpp 
+  # ${CMTK_BINARY_DIR}/bin/libcmtkBase.a 
+  # ${CMTK_BINARY_DIR}/bin/libcmtkIO.a
+  # ${CMTK_BINARY_DIR}/bin/libcmtkMxml.a
+  # ${CMTK_BINARY_DIR}/bin/libcmtkNumerics.a
+  # ${CMTK_BINARY_DIR}/bin/libcmtkRecon.a
+  # ${CMTK_BINARY_DIR}/bin/libcmtkRegistration.a
+  # ${CMTK_BINARY_DIR}/bin/libcmtkSegmentation.a
+  # ${CMTK_BINARY_DIR}/bin/libcmtkSystem.a
+  # ${CMTK_BINARY_DIR}/bin/libD4CMTK.a
+  # ${CMTK_BINARY_DIR}/bin/libNrrdIO.a
+)
+
+target_link_libraries(pycmtk 
+  ${CMTK_BINARY_DIR}/bin/libcmtkBase.so 
+  ${CMTK_BINARY_DIR}/bin/libcmtkIO.so
+  ${CMTK_BINARY_DIR}/bin/libcmtkMxml.so
+  ${CMTK_BINARY_DIR}/bin/libcmtkNumerics.so
+  ${CMTK_BINARY_DIR}/bin/libcmtkRecon.so
+  ${CMTK_BINARY_DIR}/bin/libcmtkRegistration.so
+  ${CMTK_BINARY_DIR}/bin/libcmtkSegmentation.so
+  ${CMTK_BINARY_DIR}/bin/libcmtkSystem.so
+  ${CMTK_BINARY_DIR}/bin/libD4CMTK.so
+  ${CMTK_BINARY_DIR}/bin/libNrrdIO.so
+)
+
+
+
+# cmake -DPYTHON_EXECUTABLE:FILEPATH=`which python` ../core
+# haven't figured this part out yet
+
+# SET(OBJS
+#  ${CMAKE_CURRENT_SOURCE_DIR}/libs/obj.o
+# )
+
+# ADD_EXECUTABLE(myProgram ${OBJS} <other-sources>)
+
+# SET_SOURCE_FILES_PROPERTIES(
+#  ${OBJS}
+#  PROPERTIES
+#  EXTERNAL_OBJECT true
+#  GENERATED true
+# )
