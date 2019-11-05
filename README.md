@@ -25,7 +25,8 @@ to python.
 
 2. make -j 8 # for 8 cores
 3. edit core/CMakeLists.txt to include the python bindings
-4. make pycmtk
+4. cmake -DBUILD_SHARED_LIBS=on -DPYTHON_EXECUTABLE:FILEPATH=`which python` ../core # same as line 1
+5. make pycmtk
 
   # Generates the python library in build/bin/
 ```
