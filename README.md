@@ -29,8 +29,9 @@ to python.
 5. make pycmtk
 
   # Generates the python library in build/bin/
+
+6. cd ..
+7. python setup.py bdist_wheel # generates a python wheel for distribution in dist/
 ```
 
-Currently, this compilation generates a series of shared libraries (.so files) that are linked to 
-e.g. `build/bin/pycmtk.cpython-36m-x86_64-linux-gnu.so`. This makes it somewhat difficult to distribute, 
-so additional work will be needed to create a combined shared library.
+
