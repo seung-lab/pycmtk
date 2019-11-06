@@ -9,6 +9,7 @@ namespace py = pybind11;
 
 #include <IO/cmtkXformIO.h>
 #include <IO/cmtkXformListIO.h>
+#include <IO/cmtkVolumeIO.h>
 
 #include <algorithm>
 #include <iterator>
@@ -27,7 +28,9 @@ std::vector<float> xformpoints(
     const std::vector<float> &points,
     const std::vector<std::string> &xform_paths,
     bool affine_only = false,
-    float inversion_tolerance = 1e-8
+    float inversion_tolerance = 1e-8,
+    std::string source_path = "",
+    std::string target_path = ""
   ) {
 
   cmtk::XformList xformList = cmtk::XformListIO::MakeFromStringList(xform_paths);
@@ -36,6 +39,38 @@ std::vector<float> xformpoints(
 
   if (affine_only) {
     xformList = xformList.MakeAllAffine();
+  }
+
+  if (!source_path.empty()) {
+    cmtk::UniformVolume::SmartConstPtr sourceImage( cmtk::VolumeIO::ReadOriented( source_path.c_str() ) );
+    if (!sourceImage) {
+      throw "ERROR: could not read source image.\n";
+    }
+    
+    try {
+      xformList.AddToFront( cmtk::AffineXform::SmartPtr( 
+        new cmtk::AffineXform( sourceImage->GetImageToPhysicalMatrix() ) )->GetInverse() 
+      );
+    }
+    catch (const cmtk::AffineXform::MatrixType::SingularMatrixException&) {
+      throw "ERROR: singular source image-to-physical space matrix.\n";
+    }
+  }
+
+  if (!target_path.empty()) {
+    cmtk::UniformVolume::SmartConstPtr targetImage( cmtk::VolumeIO::ReadOriented( target_path.c_str() ) );
+    if (!targetImage) {
+      throw "ERROR: could not read target image.\n";
+    }
+    
+    try {
+      xformList.Add( cmtk::AffineXform::SmartPtr( 
+        new cmtk::AffineXform( targetImage->GetImageToPhysicalMatrix() ) 
+      ));
+    }
+    catch (const cmtk::AffineXform::MatrixType::SingularMatrixException&) {
+      throw "ERROR: singular target image-to-physical space matrix.\n";
+    }      
   }
   
   const size_t N = points.size();
@@ -86,7 +121,7 @@ PYBIND11_MODULE(pycmtk, m) {
   "GNU General Public License for more details.\n"
   "\n"
   "You should have received a copy of the GNU General Public License along\n"
-  "with pycmtk. If not, see <http://www.gnu.org/licenses/>.\n"
+  "with pycmtk. If not, see <http://www.gnu.org/licenses/>.\n";
 
   m.def("xformpoints", &xformpoints, 
     "Apply a sequence of coordinate transformations to a list of xyz coordinates.\n"
@@ -105,14 +140,19 @@ PYBIND11_MODULE(pycmtk, m) {
     " affine_only: Apply only the affine component of each transformation \n"
     "    (or its inverse, if specified) in the given series, even if the \n"
     "    actual transformation is nonrigid.\n"
-    "  inversion_tolerance: Numerical tolerance of B-spline inversion in mm. \n"
+    " inversion_tolerance: Numerical tolerance of B-spline inversion in mm. \n"
     "    Smaller values will lead to more accurate inversion but may increase \n"
     "    failure rate.\n"
+    " source_path: path to an image containing a transform that will be prepended\n" 
+    "    to xform_paths after reading.\n"
+    " target_path: path to an image containing a transform that will be appended\n"
+    "    to xform_paths after reading.\n"
     "\n"
     "Returns: list of transformed xyz triples\n",
 
     py::arg("points"), py::arg("xform_paths"),
-    py::arg("affine_only") = false, py::arg("inversion_tolerance") = 1e-8
+    py::arg("affine_only") = false, py::arg("inversion_tolerance") = 1e-8,
+    py::arg("source_path") = "", py::arg("target_path") = ""
   );
 }
 
