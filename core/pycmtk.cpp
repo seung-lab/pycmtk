@@ -4,21 +4,17 @@
 
 namespace py = pybind11;
 
-// #include <cmtk_sqlite3_mangle.h>
 #include <Base/cmtkXform.h>
 #include <Base/cmtkXformList.h>
 
 #include <IO/cmtkXformIO.h>
 #include <IO/cmtkXformListIO.h>
 
-// #include <cmtk_NrrdIO_mangle.h>
-
 #include <algorithm>
 #include <iterator>
 #include <vector>
 #include <string>
 #include <limits>
-#include <iostream>
 
 // xform_brain(query_skt, sample = "FAFB14",  reference = "FCWB")
 // Mirror skt
@@ -43,7 +39,7 @@ std::vector<float> xformpoints(
   }
   
   const size_t N = points.size();
-  // std::cout <<" hello world" << std::endl;
+
   std::vector<float> output;
   output.reserve(N);
 
@@ -74,7 +70,7 @@ std::vector<float> xformpoints(
 
 PYBIND11_MODULE(pycmtk, m) {
   m.doc() = 
-  "Python bindings for a subset of the Computational Morphology Toolkit (CMTK).\n"
+  "Unofficial Python bindings for a subset of the Computational Morphology Toolkit (CMTK).\n"
   "https://www.nitrc.org/projects/cmtk\n"
   "\n"
   "This is just a wrapper around the much more sophisticated code by the CMTK authors.\n"
@@ -82,13 +78,13 @@ PYBIND11_MODULE(pycmtk, m) {
   "pycmtk Copyright (C) 2019 William Silversmith\n"
   "This program comes with ABSOLUTELY NO WARRANTY\n"
   "This is free software, and you are welcome to redistribute it\n"
-  "under certain conditions; see github.... for details.";
+  "under certain conditions; see https://github.com/seung-lab/pycmtk/blob/master/LICENSE for details.";
 
   m.def("xformpoints", &xformpoints, 
     "Apply a sequence of coordinate transformations to a list of xyz coordinates.\n"
     "You can apply the inverse transformation by specifying '-i $SPACE'.\n"
     "\n"
-    "Note: This code was derived from the `xformstream` command line tool.\n"
+    "Note: This code was derived from the `streamxform` command line tool.\n"
     "\n"
     "Example:\n"
     "  out_points = xformpoints(points=[0,0,0], xform_paths=['FAFB14', 'FCWB'])\n"
