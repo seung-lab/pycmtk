@@ -27,6 +27,7 @@
 # Modified 23-Oct-2012 by Torsten Rohlfing for CMTK, 
 # (C) 2012 SRI International
 #
+SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.4)
 PROJECT(NrrdIO)

@@ -29,7 +29,7 @@
 # ########## Project setup ##########
 PROJECT(numdiff-5.2.1)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.4.5)
-
+SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
 IF(COMMAND cmake_policy)
   cmake_policy(SET CMP0005 OLD) ## explicit escaping of compiler definition strings
 ENDIF(COMMAND cmake_policy)

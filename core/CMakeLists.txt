@@ -713,49 +713,29 @@ IF(BUILD_CONTRIB)
   ADD_SUBDIRECTORY(contrib)
 ENDIF(BUILD_CONTRIB)
 
-# SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
+SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 add_subdirectory(pybind11)
-pybind11_add_module(pycmtk pycmtk.cpp 
-  # ${CMTK_BINARY_DIR}/bin/libcmtkBase.a 
-  # ${CMTK_BINARY_DIR}/bin/libcmtkIO.a
-  # ${CMTK_BINARY_DIR}/bin/libcmtkMxml.a
-  # ${CMTK_BINARY_DIR}/bin/libcmtkNumerics.a
-  # ${CMTK_BINARY_DIR}/bin/libcmtkRecon.a
-  # ${CMTK_BINARY_DIR}/bin/libcmtkRegistration.a
-  # ${CMTK_BINARY_DIR}/bin/libcmtkSegmentation.a
-  # ${CMTK_BINARY_DIR}/bin/libcmtkSystem.a
-  # ${CMTK_BINARY_DIR}/bin/libD4CMTK.a
-  # ${CMTK_BINARY_DIR}/bin/libNrrdIO.a
-)
+pybind11_add_module(pycmtk pycmtk.cpp)
 
 target_link_libraries(pycmtk 
-  ${CMTK_BINARY_DIR}/bin/libcmtkBase.so 
-  ${CMTK_BINARY_DIR}/bin/libcmtkIO.so
-  ${CMTK_BINARY_DIR}/bin/libcmtkMxml.so
-  ${CMTK_BINARY_DIR}/bin/libcmtkNumerics.so
-  ${CMTK_BINARY_DIR}/bin/libcmtkRecon.so
-  ${CMTK_BINARY_DIR}/bin/libcmtkRegistration.so
-  ${CMTK_BINARY_DIR}/bin/libcmtkSegmentation.so
-  ${CMTK_BINARY_DIR}/bin/libcmtkSystem.so
-  ${CMTK_BINARY_DIR}/bin/libD4CMTK.so
-  ${CMTK_BINARY_DIR}/bin/libNrrdIO.so
+  "-Wl,--whole-archive"
+  ${CMTK_BINARY_DIR}/bin/libcmtkBase.a 
+  ${CMTK_BINARY_DIR}/bin/libcmtkIO.a
+  ${CMTK_BINARY_DIR}/bin/libcmtkMxml.a
+  ${CMTK_BINARY_DIR}/bin/libcmtkNumerics.a
+  ${CMTK_BINARY_DIR}/bin/libcmtkRecon.a
+  ${CMTK_BINARY_DIR}/bin/libcmtkRegistration.a
+  ${CMTK_BINARY_DIR}/bin/libcmtkSegmentation.a
+  ${CMTK_BINARY_DIR}/bin/libcmtkSystem.a
+  ${CMTK_BINARY_DIR}/bin/libD4CMTK.a
+  ${CMTK_BINARY_DIR}/bin/libNrrdIO.a
+  "-Wl,--no-whole-archive"
+  ${FFTW_LIBS}
+  z
+  bz2
 )
 
+# # cmake -DPYTHON_EXECUTABLE:FILEPATH=`which python` ../core
+# # haven't figured this part out yet
 
-
-# cmake -DPYTHON_EXECUTABLE:FILEPATH=`which python` ../core
-# haven't figured this part out yet
-
-# SET(OBJS
-#  ${CMAKE_CURRENT_SOURCE_DIR}/libs/obj.o
-# )
-
-# ADD_EXECUTABLE(myProgram ${OBJS} <other-sources>)
-
-# SET_SOURCE_FILES_PROPERTIES(
-#  ${OBJS}
-#  PROPERTIES
-#  EXTERNAL_OBJECT true
-#  GENERATED true
-# )
