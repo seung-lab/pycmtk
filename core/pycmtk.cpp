@@ -70,15 +70,23 @@ std::vector<float> xformpoints(
 
 PYBIND11_MODULE(pycmtk, m) {
   m.doc() = 
-  "Unofficial Python bindings for a subset of the Computational Morphology Toolkit (CMTK).\n"
+  "pycmtk - Unofficial Python bindings for a subset of the Computational Morphology Toolkit (CMTK).\n"
   "https://www.nitrc.org/projects/cmtk\n"
   "\n"
   "This is just a wrapper around the much more sophisticated code by the CMTK authors.\n"
   "\n"
   "pycmtk Copyright (C) 2019 William Silversmith\n"
-  "This program comes with ABSOLUTELY NO WARRANTY\n"
-  "This is free software, and you are welcome to redistribute it\n"
-  "under certain conditions; see https://github.com/seung-lab/pycmtk/blob/master/LICENSE for details.";
+  "This is free software, you can redistribute it and/or modify it under the\n"
+  "terms of the GNU General Public License as published by the Free Software Foundation,\n"
+  "either version 3 of the License, or (at your option) any later version.\n"
+  "\n" 
+  "The Computational Morphometry Toolkit is distributed in the hope that it\n"
+  "will be useful, but WITHOUT ANY WARRANTY; without even the implied\n"
+  "warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+  "GNU General Public License for more details.\n"
+  "\n"
+  "You should have received a copy of the GNU General Public License along\n"
+  "with pycmtk. If not, see <http://www.gnu.org/licenses/>.\n"
 
   m.def("xformpoints", &xformpoints, 
     "Apply a sequence of coordinate transformations to a list of xyz coordinates.\n"
