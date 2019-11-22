@@ -736,6 +736,6 @@ target_link_libraries(pycmtk
   bz2
 )
 
-# # cmake -DPYTHON_EXECUTABLE:FILEPATH=`which python` ../core
-# # haven't figured this part out yet
+# cmake -DPYTHON_EXECUTABLE:FILEPATH=`which python` ../core
+
 

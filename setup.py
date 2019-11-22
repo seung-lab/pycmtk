@@ -1,11 +1,19 @@
 import os
 from shutil import copyfile
 from setuptools import setup, Distribution
+import subprocess
 
 if not os.path.isdir('pycmtk'):
     os.mkdir('pycmtk')
 
-copyfile('build/bin/pycmtk.cpython-36m-x86_64-linux-gnu.so', 'pycmtk/pycmtk.cpython-36m-x86_64-linux-gnu.so')
+# c++ -O3 -Wall -shared -std=c++11 -fPIC `python3 -m pybind11 --includes` example.cpp -o example`python3-config --extension-suffix`
+
+extension = str(subprocess.check_output('python3-config --extension-suffix', shell=True))[2:-3]
+sharedlib = 'pycmtk' + extension
+
+destlib = sharedlib
+
+copyfile('build/bin/' + sharedlib, destlib)
 
 class BinaryDistribution(Distribution):
     def has_ext_modules(foo):
@@ -17,7 +25,7 @@ setup(
     description='Unofficial Python bindings for the Computational Morphology Toolkit (CMTK) (https://www.nitrc.org/projects/cmtk)',
     packages=['pycmtk'],
     package_data={
-        'pycmtk': ['pycmtk.cpython-36m-x86_64-linux-gnu.so'],
+        'pycmtk': [ destlib ],
     },
     distclass=BinaryDistribution,
     license = "GPLv3+",
