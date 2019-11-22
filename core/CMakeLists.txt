@@ -713,6 +713,10 @@ IF(BUILD_CONTRIB)
   ADD_SUBDIRECTORY(contrib)
 ENDIF(BUILD_CONTRIB)
 
+# comment this part out during initial compilation
+# and uncomment it during a second round of compilation
+# this is hacked in to get pybind11 to work
+
 SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 add_subdirectory(pybind11)
