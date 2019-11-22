@@ -3,12 +3,15 @@ from shutil import copyfile
 from setuptools import setup, Distribution
 import subprocess
 
+if not os.path.isdir('pycmtk'):
+    os.mkdir('pycmtk')
+
 # c++ -O3 -Wall -shared -std=c++11 -fPIC `python3 -m pybind11 --includes` example.cpp -o example`python3-config --extension-suffix`
 
 extension = str(subprocess.check_output('python3-config --extension-suffix', shell=True))[2:-3]
 sharedlib = 'pycmtk' + extension
 
-destlib = sharedlib
+destlib = 'pycmtk/' + sharedlib
 
 copyfile('build/bin/' + sharedlib, destlib)
 
