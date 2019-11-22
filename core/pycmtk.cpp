@@ -75,7 +75,7 @@ std::vector<float> xformpoints(
   
   const size_t N = points.size();
 
-  std::vector<float> output;
+  std::vector<float> output(N);
   output.reserve(N);
 
   cmtk::Xform::SpaceVectorType xyz;
@@ -100,7 +100,7 @@ std::vector<float> xformpoints(
     }
   }
 
-  return points;  
+  return output;  
 }
 
 PYBIND11_MODULE(pycmtk, m) {

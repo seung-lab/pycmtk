@@ -1,0 +1,24 @@
+! TYPEDSTREAM 2.4
+
+registration {
+
+    reference_study "V:\\Diego\\LabGenFiles\\referencebrains\\FAFB14.nrrd"
+
+    floating_study ".\\images\\FAFB14_mirror.nrrd"
+
+    affine_xform {
+
+        xlate 92.68715994 -3.2 6.4 
+
+        rotate 0.1753554091 -7.720348199 4.216903939 
+
+        scale 1.006106594 1.004530698 0.9948783409 
+
+        shear 0.0378214826 0.08805313918 -0.0005909606657 
+
+        center 507.648 294.656 141.2 
+
+    }
+
+}
+
