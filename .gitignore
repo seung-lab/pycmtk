@@ -32,4 +32,7 @@
 *.app
 
 build/
+dist
+*.egg-info
+pycmtk/__pycache__
 
